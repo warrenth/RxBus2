@@ -5,7 +5,7 @@ import java.util.List;
 import io.reactivex.disposables.Disposable;
 
 /**
- * Created by 152317 on 2018-01-24.
+ * Created by warrenth on 2018-01-24.
  */
 
 public class SubscribeData {
