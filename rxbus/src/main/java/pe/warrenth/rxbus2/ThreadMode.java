@@ -1,4 +1,4 @@
-package pe.warrenth.rxbus;
+package pe.warrenth.rxbus2;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;

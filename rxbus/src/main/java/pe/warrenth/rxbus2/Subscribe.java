@@ -1,4 +1,4 @@
-package pe.warrenth.rxbus;
+package pe.warrenth.rxbus2;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

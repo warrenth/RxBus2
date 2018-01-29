@@ -1,4 +1,4 @@
-package pe.warrenth.rxbus;
+package pe.warrenth.rxbus2;
 
 import java.util.ArrayList;
 import java.util.HashMap;

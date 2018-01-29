@@ -1,4 +1,4 @@
-package pe.warrenth.rxbus;
+package pe.warrenth.rxbus2;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
