@@ -16,7 +16,7 @@ import pe.warrenth.rxbus2.Subscribe;
 import pe.warrenth.samplerxbus.event.EventType;
 
 /**
- * Created by 152317 on 2017-12-04.
+ * Created by warrenth on 2017-12-04.
  */
 
 public class LeftMenuFragment extends Fragment {
