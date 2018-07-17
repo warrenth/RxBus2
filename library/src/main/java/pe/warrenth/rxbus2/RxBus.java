@@ -53,17 +53,19 @@ public class RxBus {
         Log.d("RXBUS2", "register : "+ uniqueClassName);
         List<SubscriberMethod> subscriberMethodsList = mSubscriberMethodFinder.getSubscriberMethods(subscriber, registClass, uniqueClassName);
 
-        List<Disposable> disposableList = new ArrayList<>();
+        if(subscriberMethodsList != null &&  subscriberMethodsList.size() > 0) {
+            List<Disposable> disposableList = new ArrayList<>();
 
-        for(SubscriberMethod subscriberMethod : subscriberMethodsList) {
-            Disposable disposable = getDisposable(subscriberMethod);
-            if( ! disposableList.contains(disposable)) {
-                disposableList.add(disposable);
-                compositeDisposable.add(disposable);
+            for (SubscriberMethod subscriberMethod : subscriberMethodsList) {
+                Disposable disposable = getDisposable(subscriberMethod);
+                if (!disposableList.contains(disposable)) {
+                    disposableList.add(disposable);
+                    compositeDisposable.add(disposable);
+                }
             }
-        }
 
-        setSubscribeData(uniqueClassName, subscriberMethodsList, disposableList);
+            setSubscribeData(uniqueClassName, subscriberMethodsList, disposableList);
+        }
     }
 
     private String getUniqueClassName(OnRxBusFindDataInterface subscriber, Class<?> registClass) {

@@ -15,7 +15,7 @@ import pe.warrenth.samplerxbus.event.EventType;
  * Created by 152317 on 2018-02-26.
  */
 
-public class BaseFragment extends Fragment implements OnRxBusFindDataInterface{
+public class BaseFragment extends Fragment implements OnRxBusFindDataInterface {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
