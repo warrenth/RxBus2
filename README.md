@@ -6,12 +6,17 @@ It simplifies the communication between Activities, Fragments etc.
  
 Rxbus2 is pettern based on [Publish & Subscribe Pattern](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) 
 
-
 Advantages
 - Loosely coupled, Easy to develop, Simply 
 
 Disadvantages
 - Debugging is difficult, Not easy management.
+
+Different from other event buses
+--
+1. Use CompositeDisposable for efficient memory management.
+2. You can receive events from the BaseClass. (BaseActivity, BaseFragment etc...)
+3. You can register the same class using hascode.
 
 RxBus2 in Step
 --
@@ -63,6 +68,25 @@ RxBus2 in Step
         mTextContent.append(allMsg + "\n");
     }         
  </code></pre>  
+ 
+4. You can also receive events in the base class.
+If you need to receive events from the base class,
+Use as follows.
+
+<pre><code>   
+@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        RxBus.get().register(this, RxBusHelper.getRegistClass(this, BaseClass.class));
+    }
+    @Override
+     protected void onDestroy() {
+        super.onDestroy();
+        RxBus.get().unResister(this, RxBusHelper.getRegistClass(this, BaseClass.class));
+     }
+</code></pre>  
+
+
 
 
 License

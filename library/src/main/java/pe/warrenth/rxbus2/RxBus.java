@@ -1,10 +1,13 @@
 package pe.warrenth.rxbus2;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
@@ -18,12 +21,14 @@ import io.reactivex.processors.PublishProcessor;
 public class RxBus {
 
     private volatile static RxBus INTANCE;
-    private Map<Class<?>, SubscribeData> mSubscribeDataMap = new HashMap<>();
+    private Map<String, SubscribeData> mSubscribeDataMap = new HashMap<>();
     private final FlowableProcessor<Object> mFlowableProcessoer;
 
     private final SubscriberMethodFinder mSubscriberMethodFinder;
+    private CompositeDisposable compositeDisposable;
 
     public RxBus() {
+        compositeDisposable = new CompositeDisposable();
         mFlowableProcessoer = PublishProcessor.create().toSerialized();
         mSubscriberMethodFinder = new SubscriberMethodFinder();
     }
@@ -39,8 +44,14 @@ public class RxBus {
         return INTANCE;
     }
 
-    public void register(Object subscriber) {
-        List<SubscriberMethod> subscriberMethodsList = mSubscriberMethodFinder.getSubscriberMethods(subscriber);
+    public void register(OnRxBusFindDataInterface subscriber) {
+        register(subscriber, null);
+    }
+
+    public void register(OnRxBusFindDataInterface subscriber, Class<?> registClass) {
+        String uniqueClassName = getUniqueClassName(subscriber, registClass);
+        Log.d("RXBUS2", "register : "+ uniqueClassName);
+        List<SubscriberMethod> subscriberMethodsList = mSubscriberMethodFinder.getSubscriberMethods(subscriber, registClass, uniqueClassName);
 
         List<Disposable> disposableList = new ArrayList<>();
 
@@ -48,24 +59,46 @@ public class RxBus {
             Disposable disposable = getDisposable(subscriberMethod);
             if( ! disposableList.contains(disposable)) {
                 disposableList.add(disposable);
+                compositeDisposable.add(disposable);
             }
         }
 
-        setSubscribeData(subscriber.getClass(), subscriberMethodsList, disposableList);
+        setSubscribeData(uniqueClassName, subscriberMethodsList, disposableList);
     }
 
-    private void setSubscribeData(Class<?> subClass, List<SubscriberMethod> subscriberMethodsList, List<Disposable> disposableList) {
-        SubscribeData subscribeData = mSubscribeDataMap.get(subClass);
+    private String getUniqueClassName(OnRxBusFindDataInterface subscriber, Class<?> registClass) {
+        String className;
+        if(registClass != null) {
+            className = registClass.getSimpleName();
+        } else {
+            className = subscriber.getObject().getClass().getSimpleName();
+        }
+        return className + subscriber.getHashCode();
+    }
+
+    private void setSubscribeData(String uniqueClassName, List<SubscriberMethod> subscriberMethodsList, List<Disposable> disposableList) {
+        SubscribeData subscribeData = mSubscribeDataMap.get(uniqueClassName);
         if (subscribeData == null) {
             subscribeData = new SubscribeData(subscriberMethodsList, disposableList);
-            mSubscribeDataMap.put(subClass, subscribeData);
+            mSubscribeDataMap.put(uniqueClassName, subscribeData);
         }
     }
 
-    public void unResister(Object subscriber) {
-        Class<?> subscriberClass = subscriber.getClass();
-        if(mSubscribeDataMap.get(subscriberClass) != null) {
-            mSubscribeDataMap.remove(subscriberClass);
+    public void unResister(OnRxBusFindDataInterface subscriber) {
+        unResister(subscriber, null);
+    }
+
+    public void unResister(OnRxBusFindDataInterface subscriber, Class<?> registClass) {
+        String uniqueClassName = getUniqueClassName(subscriber, registClass);
+        Log.d("RXBUS2", "unResister : "+ uniqueClassName);
+        if(mSubscribeDataMap.get(uniqueClassName) != null) {
+            SubscribeData subscribeData = mSubscribeDataMap.get(uniqueClassName);
+            if(subscribeData != null) {
+                for(Disposable disposable : subscribeData.getDisposables()) {
+                    compositeDisposable.remove(disposable);
+                }
+            }
+            mSubscribeDataMap.remove(uniqueClassName);
         }
     }
 
@@ -88,15 +121,20 @@ public class RxBus {
     }
 
     private void invokeMethod(SubscriberMethod method, Object object) {
-        List<SubscriberMethod> methods = mSubscribeDataMap.get(method.getSubscriber().getClass()).getSubscriberMethods();
-        if (methods != null && methods.size() > 0) {
-            for (SubscriberMethod subscriberMethod : methods) {
-                Subscribe sub = subscriberMethod.method.getAnnotation(Subscribe.class);
-                String c = sub.eventTag();
-                if (c.equals(method.eventTag) && method.subscriber.equals(subscriberMethod.subscriber) && method.method.equals(subscriberMethod.method)) {
-                    subscriberMethod.invoke(object);
+        Log.d("RXBUS2", "invokeMethod : "+ method.getUniqueClassName());
+        try {
+            List<SubscriberMethod> methods = mSubscribeDataMap.get(method.getUniqueClassName()).getSubscriberMethods();
+            if (methods != null && methods.size() > 0) {
+                for (SubscriberMethod subscriberMethod : methods) {
+                    Subscribe sub = subscriberMethod.method.getAnnotation(Subscribe.class);
+                    String c = sub.eventTag();
+                    if (c.equals(method.eventTag) && method.subscriber.equals(subscriberMethod.subscriber) && method.method.equals(subscriberMethod.method)) {
+                        subscriberMethod.invoke(object);
+                    }
                 }
             }
+        } catch (Exception e) {
+            Log.d("RXBUS2", "invokeMethod Fail : "+ method.getUniqueClassName());
         }
     }
 

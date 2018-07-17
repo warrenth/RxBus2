@@ -5,6 +5,9 @@ package pe.warrenth.samplerxbus.event;
  */
 
 public class EventType {
+    public static final String LOG = EventType.class.getSimpleName();
+    public static final boolean DEBUG_MODE = true;
+
     public interface TAG {
         public static final String LEFT_MENU = "call_left_menu";
         public static final String RIGHT_MENU = "call_right_menu";

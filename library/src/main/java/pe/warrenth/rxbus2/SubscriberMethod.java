@@ -13,13 +13,15 @@ public class SubscriberMethod {
     public Method method;
     public ThreadMode threadMode;
     public String eventTag;
+    public String uniqueClassName;
 
-    public SubscriberMethod(Object subscriber, Class<?> paramType, Method method, ThreadMode threadMode, String eventTag) {
+    public SubscriberMethod(Object subscriber, Class<?> paramType, Method method, ThreadMode threadMode, String eventTag, String uniqueClassName) {
         this.subscriber = subscriber;
         this.paramType = paramType;
         this.method = method;
         this.threadMode = threadMode;
         this.eventTag = eventTag;
+        this.uniqueClassName = uniqueClassName;
     }
 
     public Object getSubscriber() {
@@ -36,6 +38,10 @@ public class SubscriberMethod {
 
     public String getEventTag() {
         return eventTag;
+    }
+
+    public String getUniqueClassName() {
+        return uniqueClassName;
     }
 
     public void invoke(Object o) {

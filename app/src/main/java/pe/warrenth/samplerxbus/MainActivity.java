@@ -1,5 +1,6 @@
 package pe.warrenth.samplerxbus;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -11,11 +12,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import pe.warrenth.rxbus2.OnRxBusFindDataInterface;
 import pe.warrenth.rxbus2.RxBus;
 import pe.warrenth.rxbus2.Subscribe;
 import pe.warrenth.samplerxbus.event.EventType;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnRxBusFindDataInterface {
 
     private DrawerLayout mDrawerLayout;
 
@@ -62,6 +64,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+        findViewById(R.id.btn_center).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addActivity();
+            }
+        });
+    }
+
+    private void addActivity() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
@@ -81,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 RxBus.get().send(EventType.TAG.LEFT_MENU, new ArrayList<>());
                 break;
             case R.id.btn_send_all:
-                RxBus.get().send(EventType.TAG.ALL, "Send ALL");
+                RxBus.get().send(EventType.TAG.ALL);
                 break;
             case R.id.btn_send_right:
                 RxBus.get().send(EventType.TAG.RIGHT_MENU, 2018);
@@ -101,7 +113,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Subscribe(eventTag = EventType.TAG.ALL)
-    public void receiveAll(String allMsg) {
-        mTextContent.append(allMsg + "\n");
+    public void receiveAll() {
+        mTextContent.append("Send ALL" + "\n");
+    }
+
+    @Override
+    public Object getObject() {
+        return this;
+    }
+
+    @Override
+    public int getHashCode() {
+        return System.identityHashCode(this);
     }
 }

@@ -2,7 +2,6 @@ package pe.warrenth.samplerxbus;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import pe.warrenth.samplerxbus.event.EventType;
  * Created by warrenth on 2017-12-04.
  */
 
-public class LeftMenuFragment extends Fragment {
+public class LeftMenuFragment extends BaseFragment {
 
     private Button mBtnSendMiddle;
     private TextView mTextContent;
@@ -62,7 +61,7 @@ public class LeftMenuFragment extends Fragment {
     }
 
     @Subscribe(eventTag = EventType.TAG.ALL)
-    public void receiveAll(String allMsg) {
-        mTextContent.append(allMsg + "\n");
+    public void receiveAll() {
+        mTextContent.append("Send ALL" + "\n");
     }
 }

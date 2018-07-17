@@ -10,9 +10,15 @@ import java.util.List;
 
 public class SubscriberMethodFinder {
 
-    public List<SubscriberMethod> getSubscriberMethods(Object subscriber) {
+    public List<SubscriberMethod> getSubscriberMethods(Object subscriber, Class<?> registClass, String uniqueClassName) {
         List<SubscriberMethod> subscriberMethods = new ArrayList<>();
-        Method[] methods = subscriber.getClass().getDeclaredMethods();
+        Method[] methods = null;
+
+        if(registClass != null) {
+            methods = registClass.getDeclaredMethods();
+        } else  {
+            methods = subscriber.getClass().getDeclaredMethods();
+        }
 
         for(Method method : methods) {
             if(method.isAnnotationPresent(Subscribe.class)) {
@@ -26,7 +32,7 @@ public class SubscriberMethodFinder {
                     paramType = RxBus.EmptyParam.class;
                 }
                 SubscriberMethod subscriberMethod
-                        = new SubscriberMethod(subscriber, paramType, method, threadMode, subscribeAnnotaion.eventTag());
+                        = new SubscriberMethod(subscriber, paramType, method, threadMode, subscribeAnnotaion.eventTag(), uniqueClassName);
                 subscriberMethods.add(subscriberMethod);
             }
 
