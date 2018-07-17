@@ -35,7 +35,7 @@ repositories {
  Add the gradle dependency to your app module build.gradle file:
 <pre><code>
 dependencies {
-    compile 'com.heinrichreimersoftware:material-drawer:2.3.3'
+    implementation 'com.github.warrenth:RxBus2:1.0.0'
 }
  </code></pre>
 Get the latest dependency at jitpack.io.
