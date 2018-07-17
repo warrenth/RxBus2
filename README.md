@@ -12,11 +12,34 @@ Advantages
 Disadvantages
 - Debugging is difficult, Not easy management.
 
+
 Different from other event buses
 --
 1. Use CompositeDisposable for efficient memory management.
 2. You can receive events from the BaseClass. (BaseActivity, BaseFragment etc...)
 3. You can register the same class using hascode.
+
+
+Dependency
+--
+Gradle dependency:
+
+Add it in your root build.gradle at the end of repositories:
+<pre><code>
+repositories {
+    // ...
+    maven { url 'https://jitpack.io' }
+}
+ </code></pre>
+ 
+ Add the gradle dependency to your app module build.gradle file:
+<pre><code>
+dependencies {
+    compile 'com.heinrichreimersoftware:material-drawer:2.3.3'
+}
+ </code></pre>
+Get the latest dependency at jitpack.io.
+
 
 RxBus2 in Step
 --
@@ -93,4 +116,4 @@ License
 -
 Copyright 2018 warrenth, Inc.
 
-The contents of this repository are licensed under the [MIT license](https://opensource.org/licenses/MIT)
+The contents of this repository are licensed under the [Apache-2.0](https://opensource.org/licenses/Apache-2.0)
