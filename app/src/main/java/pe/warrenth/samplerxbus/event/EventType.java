@@ -1,7 +1,7 @@
 package pe.warrenth.samplerxbus.event;
 
 /**
- * Created by 152317 on 2018-01-25.
+ * Created by warrenth on 2018-01-25.
  */
 
 public class EventType {

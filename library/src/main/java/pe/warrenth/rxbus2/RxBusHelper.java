@@ -1,7 +1,7 @@
 package pe.warrenth.rxbus2;
 
 /**
- * Created by 152317 on 2018-02-23.
+ * Created by warrenth on 2018-02-23.
  */
 
 public class RxBusHelper {

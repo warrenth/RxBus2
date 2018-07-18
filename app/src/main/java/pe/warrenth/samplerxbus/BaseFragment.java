@@ -12,7 +12,7 @@ import pe.warrenth.rxbus2.Subscribe;
 import pe.warrenth.samplerxbus.event.EventType;
 
 /**
- * Created by 152317 on 2018-02-26.
+ * Created by warrenth on 2018-02-26.
  */
 
 public class BaseFragment extends Fragment implements OnRxBusFindDataInterface {
