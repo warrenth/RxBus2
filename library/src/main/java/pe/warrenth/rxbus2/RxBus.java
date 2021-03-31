@@ -106,6 +106,7 @@ public class RxBus {
 
     private Disposable getDisposable(final SubscriberMethod subscriberMethod) {
         return mFlowableProcessoer.ofType(EventMessage.class)
+                .observeOn(ThreadMode.getScheduler(subscriberMethod))
                 .filter(new Predicate<EventMessage>() {
                     @Override
                     public boolean test(EventMessage eventMessage) throws Exception {
@@ -113,7 +114,7 @@ public class RxBus {
                                 && subscriberMethod.getParamType().isInstance(eventMessage.getObject());
                     }
                 })
-                .observeOn(ThreadMode.getScheduler(subscriberMethod))
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer() {
                     @Override
                     public void accept(Object o) throws Exception {

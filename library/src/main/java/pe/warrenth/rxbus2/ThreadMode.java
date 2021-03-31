@@ -10,16 +10,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public enum ThreadMode {
 
-    MAIN_THREAD,  NEW_THREAD;
+    MAIN_THREAD, SINGLE;
 
     public static Scheduler getScheduler(SubscriberMethod subscriberMethod) {
         Scheduler scheduler;
         switch (subscriberMethod.getThreadMode()) {
-            case MAIN_THREAD:
-                scheduler = AndroidSchedulers.mainThread();
-                break;
-            case NEW_THREAD:
-                scheduler = Schedulers.newThread();
+            case SINGLE:
+                scheduler = Schedulers.single();
                 break;
             default:
                 scheduler = AndroidSchedulers.mainThread();
